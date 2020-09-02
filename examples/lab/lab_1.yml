@@ -1,0 +1,6 @@
+packages:
+  - vim
+  - runawk
+
+#foo:
+#  bar

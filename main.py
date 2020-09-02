@@ -2,20 +2,32 @@
 
 import apt
 import sys
+import yaml
 
-pkg_name = "vim"
 
-cache = apt.cache.Cache()
-cache.update()
-cache.open()
+def process_packages(packages_data):
+    cache = apt.cache.Cache()
+    cache.update()
+    cache.open()
+    for pkg_name in packages_data:
+        pkg = cache[pkg_name]
+        if pkg.is_installed:
+            print(f"{pkg_name} already installed")
+        else:
+            print(f"[AUTOMATA LOG] Installing package: {pkg}")
+            pkg.mark_install()
 
-pkg = cache[pkg_name]
-if pkg.is_installed:
-    print("{pkg_name} already installed".format(pkg_name=pkg_name))
-else:
-    pkg.mark_install()
+            try:
+                cache.commit()
+            except Exception as arg:
+                print >> sys.stderr, "Sorry, package installation failed [{err}]".format(err=str(arg))
 
-    try:
-        cache.commit()
-    except Exception as arg:
-        print >> sys.stderr, "Sorry, package installation failed [{err}]".format(err=str(arg))
+
+with open('examples/lab/lab_1.yml') as file:
+    content = yaml.load(file)
+
+for key in content.keys():
+    if key == 'packages':
+        process_packages(content[key])
+    else:
+        raise Exception(f"Invalid type {key}")
