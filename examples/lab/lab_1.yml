@@ -3,8 +3,13 @@ version: '0.1'
 apt_keys:
   - url: https://dl.yarnpkg.com/debian/pubkey.gpg
 
+
+# echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
 sources:
   - yarn.list: 'deb https://dl.yarnpkg.com/debian/ stable main'
+
+
 
 #packages:
 #  - vim
