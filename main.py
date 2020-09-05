@@ -6,11 +6,11 @@ import lib.manager as manager
 from lib.handlers import process_apt_packages, process_apt_keys, process_sources, process_file_block, \
     process_systemd_services
 
-# remote debugging
-pydevd_pycharm.settrace('localhost', port=8080, stdoutToServer=True, stderrToServer=True)
-
 manager.init()
 args = manager.console_input_args()
+
+if args.debug:
+    pydevd_pycharm.settrace('localhost', port=8080, stdoutToServer=True, stderrToServer=True)
 
 with open(args.file) as file:
     content = yaml.load(file)
