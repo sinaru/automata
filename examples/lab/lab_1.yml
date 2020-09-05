@@ -14,7 +14,7 @@ apt_packages:
 files:
   -
     path: '/etc/nginx/nginx.conf'
-    content: 'examples/configurations/nginx.conf'
+    content: 'examples/lab/configurations/nginx.conf'
 
 # Change state of running services
 systemd.services:
