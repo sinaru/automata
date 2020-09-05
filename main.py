@@ -64,6 +64,18 @@ def process_file_block(files_data):
         open(file_info['path'], 'w').write(new_content)
 
 
+def process_systemd_services(service_block):
+    for service_name in service_block.keys():
+        for action in service_block[service_name]:
+            process_cmd = f"systemctl {action} {service_name}".split()
+            process = subprocess.Popen(process_cmd,
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
+            if stderr != b'':
+                raise Exception(stderr.decode())
+
+
 if not os.path.exists('.automata/'):
     os.mkdir('.automata')
 
@@ -85,5 +97,7 @@ for key in content.keys():
         process_sources(data)
     elif key == 'files':
         process_file_block(data)
+    elif key == 'systemd.services':
+        process_systemd_services(data)
     else:
         raise Exception(f"Invalid type {key}")

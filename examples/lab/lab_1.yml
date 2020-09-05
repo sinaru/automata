@@ -15,3 +15,8 @@ files:
   -
     path: '/etc/nginx/nginx.conf'
     content: 'examples/configurations/nginx.conf'
+
+# Change state of running services
+systemd.services:
+    nginx:
+      - restart
