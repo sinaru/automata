@@ -9,3 +9,9 @@ sources:
 apt_packages:
   - vim
   - yarn
+  - nginx
+
+files:
+  -
+    path: '/etc/nginx/nginx.conf'
+    content: 'examples/configurations/nginx.conf'

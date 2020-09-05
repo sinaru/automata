@@ -58,6 +58,12 @@ def process_sources(sources_list):
         open(f"/etc/apt/sources.list.d/{file_name}", 'w').write(source_content)
 
 
+def process_file_block(files_data):
+    for file_info in files_data:
+        new_content = open(file_info['content']).read()
+        open(file_info['path'], 'w').write(new_content)
+
+
 if not os.path.exists('.automata/'):
     os.mkdir('.automata')
 
@@ -77,5 +83,7 @@ for key in content.keys():
         process_apt_keys(data)
     elif key == 'sources':
         process_sources(data)
+    elif key == 'files':
+        process_file_block(data)
     else:
         raise Exception(f"Invalid type {key}")
