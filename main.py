@@ -2,8 +2,8 @@
 
 import pydevd_pycharm
 import yaml
-import lib.manager as manager
-from lib.handlers import process_apt_packages, process_apt_keys, process_sources, process_file_block, \
+import automata.manager as manager
+from automata.handlers import process_apt_packages, process_apt_keys, process_sources, process_file_block, \
     process_systemd_services
 
 manager.init()
