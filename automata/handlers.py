@@ -65,11 +65,3 @@ def process_systemd_services(service_block):
             stdout, stderr = process.communicate()
             if stderr != b'':
                 raise Exception(stderr.decode())
-
-key_function = {
-    'apt_packages': 'process_apt_packages',
-    'apt_keys': 'process_apt_keys',
-    'sources': 'process_sources',
-    'files': 'process_file_block',
-    'systemd.services': 'process_systemd_services'
-}
