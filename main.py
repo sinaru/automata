@@ -28,7 +28,7 @@ def process_apt_packages(packages_data):
             try:
                 cache.commit()
             except Exception as arg:
-                print >> sys.stderr, "Sorry, package installation failed [{err}]".format(err=str(arg))
+                raise Exception(f"Sorry, package installation failed [{str(arg)}]")
 
 
 def process_apt_keys(key_data):
