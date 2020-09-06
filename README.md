@@ -8,3 +8,10 @@ in a YAML file based on this specific DSL.
 ## Automata DSL 
 
 *TBD*
+
+## Development
+
+- Python 3
+- Following Python packages:
+    - yaml
+    - pydevd_pycharm (for remote debugging)

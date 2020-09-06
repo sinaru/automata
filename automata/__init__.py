@@ -1,3 +1,5 @@
+import os
+
 from automata.handlers import process_apt_packages, process_apt_keys, process_sources, process_file_block, \
     process_systemd_services
 
@@ -10,7 +12,18 @@ key_function = {
 }
 
 
+def init():
+    if not os.path.exists('.automata/'):
+        os.mkdir('.automata')
+
+
 def process_content(content):
+    version = content.pop('version', '')
+
+    if version != '0.1':
+        raise Exception("Unknown version")
+
+    init()
     for key in content.keys():
         process_entry(key, content[key])
 
