@@ -10,6 +10,11 @@ key_function = {
 }
 
 
+def process_content(content):
+    for key in content.keys():
+        process_entry(key, content[key])
+
+
 def process_entry(section_name, data):
     function = key_function.get(section_name, False)
 
