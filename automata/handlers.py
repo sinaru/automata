@@ -65,3 +65,8 @@ def process_systemd_services(service_block):
             stdout, stderr = process.communicate()
             if stderr != b'':
                 raise Exception(stderr.decode())
+
+
+def process_version(version):
+    if version != '0.1':
+        raise Exception("Unknown version")

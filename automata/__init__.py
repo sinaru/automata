@@ -1,9 +1,10 @@
 import os
 
 from automata.handlers import process_apt_packages, process_apt_keys, process_sources, process_file_block, \
-    process_systemd_services
+    process_systemd_services, process_version
 
 key_function = {
+    'version': 'process_version',
     'apt_packages': 'process_apt_packages',
     'apt_keys': 'process_apt_keys',
     'sources': 'process_sources',
@@ -18,14 +19,14 @@ def init():
 
 
 def process_content(content):
-    version = content.pop('version', '')
-
-    if version != '0.1':
-        raise Exception("Unknown version")
-
     init()
-    for key in content.keys():
-        process_entry(key, content[key])
+    for entry in content:
+        process_list_entry(entry)
+
+
+def process_list_entry(data):
+    for key in data.keys():
+        process_entry(key, data[key])
 
 
 def process_entry(section_name, data):
