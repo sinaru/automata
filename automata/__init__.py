@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from automata.handlers import process_apt_packages, process_apt_keys, process_sources, process_file_block, \
     process_systemd_services, process_version, process_bash_scripts
@@ -15,8 +16,10 @@ key_function = {
 
 
 def init():
-    if not os.path.exists('.automata/'):
-        os.mkdir('.automata')
+    d_path = '.automata/'
+    if os.path.exists(d_path):
+        shutil.rmtree(d_path)
+    os.mkdir(d_path)
 
 
 def process_content(content):
