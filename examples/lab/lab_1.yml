@@ -13,12 +13,14 @@
 
 - files:
   -
-    path: '/etc/nginx/nginx.conf'
-    content: 'examples/lab/configurations/nginx.conf'
+    src: '/etc/nginx/nginx.conf'
+    dest: 'examples/lab/configurations/nginx.conf'
+    sudo: yes
 
 # Change state of running services
 - systemd.services:
     nginx:
       - restart
 
-#- shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh
+- bash_scripts:
+    - url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh

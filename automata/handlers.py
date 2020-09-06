@@ -1,44 +1,88 @@
-import hashlib
 import subprocess
-import apt
 import requests
+import uuid
 
-
-def process_apt_packages(packages_data):
+'''
+    import apt
     cache = apt.cache.Cache()
     cache.update()
     cache.open()
-    for pkg_name in packages_data:
-        pkg = cache[pkg_name]
+    
+    pkg = cache[pkg_name]
         if pkg.is_installed:
             print(f"{pkg_name} already installed")
         else:
             print(f"[AUTOMATA LOG] Installing package: {pkg}")
             pkg.mark_install()
+'''
 
-            try:
-                cache.commit()
-            except Exception as arg:
-                raise Exception(f"Sorry, package installation failed [{str(arg)}]")
+
+def process_apt_packages(packages_data):
+    process = subprocess.Popen(['sudo', 'apt', 'update'],
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+
+    if stderr != b'':
+        if stderr != b'\nWARNING: apt does not have a stable CLI interface. Use with caution in scripts.\n\n':
+            raise Exception(stderr.decode())
+    elif stdout != b'':
+        print(stdout.decode())
+
+    for pkg_name in packages_data:
+        process = subprocess.Popen(['sudo', 'apt', 'install', pkg_name],
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+
+        if stderr != b'':
+            if stderr != b'\nWARNING: apt does not have a stable CLI interface. Use with caution in scripts.\n\n':
+                raise Exception(stderr.decode())
+        elif stdout != b'':
+            print(stdout.decode())
 
 
 def process_apt_keys(key_data):
     for key_set in key_data:
         if key_set.get('url', False):
-            apt_key = key_set['url']
-            key_name = hashlib.sha224(apt_key.encode()).hexdigest()
-            key_path = f".automata/{key_name}.gdp"
-            r = requests.get(apt_key, allow_redirects=True)
-            open(key_path, 'wb').write(r.content)
-
-            process = subprocess.Popen(['apt-key', 'add', key_path],
+            f_path = url_to_local_file_path(key_set['url'])
+            process = subprocess.Popen(['sudo', 'apt-key', 'add', f_path],
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE)
             stdout, _stderr = process.communicate()
             if stdout == b'OK\n':
-                print(f"key added: {apt_key}")
+                print(f"key added: {key_set['url']}")
             else:
                 raise Exception('failed to add key')
+
+
+def url_to_local_file_path(url):
+    r = requests.get(url, allow_redirects=True)
+    return content_to_temp_path(r.content)
+
+
+def content_to_temp_path(content):
+    key_name = uuid.uuid4()
+    local_path = f".automata/{key_name}"
+    mode = 'w' if isinstance(content, str) else 'wb'
+    open(local_path, mode).write(content)
+    return local_path
+
+
+def process_bash_scripts(data):
+    for key_set in data:
+        if key_set.get('url', False):
+            f_path = url_to_local_file_path(key_set['url'])
+
+            process = subprocess.Popen(['bash', f_path],
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
+
+            if stderr != b'':
+                raise Exception(stderr.decode())
+            elif stdout != b'':
+                print(stdout.decode())
 
 
 def process_sources(sources_list):
@@ -46,19 +90,44 @@ def process_sources(sources_list):
         key_name = list(source.keys())[0]
         file_name = key_name + '.list'
         source_content = source[key_name]
-        open(f"/etc/apt/sources.list.d/{file_name}", 'w').write(source_content)
+        src_file = content_to_temp_path(source_content)
+        dst_file = f"/etc/apt/sources.list.d/{file_name}"
+
+        process = subprocess.Popen(['sudo', 'cp', src_file, dst_file],
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+
+        if stderr != b'':
+            raise Exception(stderr.decode())
+        elif stdout != b'':
+            print(stdout.decode())
 
 
 def process_file_block(files_data):
     for file_info in files_data:
-        new_content = open(file_info['content']).read()
-        open(file_info['path'], 'w').write(new_content)
+        src_file = file_info['src']
+        dst_file = file_info['dest']
+
+        if file_info.get('sudo', False):
+            process = subprocess.Popen(['sudo', 'cp', src_file, dst_file],
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
+
+            if stderr != b'':
+                raise Exception(stderr.decode())
+            elif stdout != b'':
+                print(stdout.decode())
+        else:
+            new_content = open(dst_file).read()
+            open(src_file, 'w').write(new_content)
 
 
 def process_systemd_services(service_block):
     for service_name in service_block.keys():
         for action in service_block[service_name]:
-            process_cmd = f"systemctl {action} {service_name}".split()
+            process_cmd = f"sudo systemctl {action} {service_name}".split()
             process = subprocess.Popen(process_cmd,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE)
