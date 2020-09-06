@@ -3,21 +3,8 @@ import os
 
 from automata.helpers import url_to_local_file_path, content_to_temp_path, run_command
 
-'''
-    import apt
-    cache = apt.cache.Cache()
-    cache.update()
-    cache.open()
-    
-    pkg = cache[pkg_name]
-        if pkg.is_installed:
-            print(f"{pkg_name} already installed")
-        else:
-            print(f"[AUTOMATA LOG] Installing package: {pkg}")
-            pkg.mark_install()
-'''
 
-
+# todo maybe use apt package
 def process_apt_packages(packages_data):
     process = subprocess.Popen(['sudo', 'apt', 'update'],
                                stdout=subprocess.PIPE,
