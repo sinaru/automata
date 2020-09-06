@@ -58,3 +58,12 @@ def process_systemd_services(service_block):
 def process_version(version):
     if version != '0.1':
         raise Exception("Unknown version")
+
+
+def process_git(data):
+    for block in data:
+        if block.get('clone', False):
+            cmd = ['git', 'clone', (block['clone'])]
+            if block.get('dest', ''):
+                cmd.append(block['dest'])
+            run_command(cmd)

@@ -2,7 +2,7 @@ import os
 import shutil
 
 from automata.handlers import process_apt_packages, process_apt_keys, process_sources, process_file_block, \
-    process_systemd_services, process_version, process_bash_scripts
+    process_systemd_services, process_version, process_bash_scripts, process_git
 
 key_function = {
     'version': 'process_version',
@@ -12,6 +12,7 @@ key_function = {
     'files': 'process_file_block',
     'systemd.services': 'process_systemd_services',
     'bash_scripts': 'process_bash_scripts',
+    'git': 'process_git'
 }
 
 

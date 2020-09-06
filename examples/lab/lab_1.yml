@@ -24,3 +24,8 @@
 
 - bash_scripts:
     - https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh
+
+- git:
+  -
+   clone: https://github.com/NirantK/awesome-project-ideas
+   dest: /home/sinaru/temp/awesome-project-ideas
