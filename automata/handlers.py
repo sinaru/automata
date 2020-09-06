@@ -1,6 +1,6 @@
 import subprocess
-import requests
-import uuid
+
+from automata.helpers import url_to_local_file_path, content_to_temp_path, run_command
 
 '''
     import apt
@@ -56,19 +56,6 @@ def process_apt_keys(key_data):
                 raise Exception('failed to add key')
 
 
-def url_to_local_file_path(url):
-    r = requests.get(url, allow_redirects=True)
-    return content_to_temp_path(r.content)
-
-
-def content_to_temp_path(content):
-    key_name = uuid.uuid4()
-    local_path = f".automata/{key_name}"
-    mode = 'w' if isinstance(content, str) else 'wb'
-    open(local_path, mode).write(content)
-    return local_path
-
-
 def process_bash_scripts(data):
     for key_set in data:
         if key_set.get('url', False):
@@ -106,17 +93,6 @@ def process_file_block(files_data):
         else:
             new_content = open(dst_file).read()
             open(src_file, 'w').write(new_content)
-
-
-def run_command(cmd):
-    process = subprocess.Popen(cmd,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-    if stderr != b'':
-        raise Exception(stderr.decode())
-    elif stdout != b'':
-        print(stdout.decode())
 
 
 def process_systemd_services(service_block):
