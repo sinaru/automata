@@ -18,11 +18,5 @@ def content_to_temp_path(content):
 
 
 def run_command(cmd):
-    process = subprocess.Popen(cmd,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-    if stderr != b'':
-        raise Exception(stderr.decode())
-    elif stdout != b'':
-        print(stdout.decode())
+    completed_process = subprocess.run(cmd)
+    return completed_process

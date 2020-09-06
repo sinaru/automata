@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 from automata.helpers import url_to_local_file_path, content_to_temp_path, run_command
 
@@ -46,14 +47,9 @@ def process_apt_keys(key_data):
     for key_set in key_data:
         if key_set.get('url', False):
             f_path = url_to_local_file_path(key_set['url'])
-            process = subprocess.Popen(['sudo', 'apt-key', 'add', f_path],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
-            stdout, _stderr = process.communicate()
-            if stdout == b'OK\n':
-                print(f"key added: {key_set['url']}")
-            else:
-                raise Exception('failed to add key')
+            os.environ['APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE'] = '1'
+            run_command(['sudo', 'apt-key', 'add', f_path])
+            print(f"key added: {key_set['url']}")
 
 
 def process_bash_scripts(data):
