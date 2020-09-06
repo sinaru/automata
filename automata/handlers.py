@@ -1,40 +1,18 @@
-import subprocess
-import os
-
 from automata.helpers import url_to_local_file_path, content_to_temp_path, run_command
 
 
 # todo maybe use apt package
 def process_apt_packages(packages_data):
-    process = subprocess.Popen(['sudo', 'apt', 'update'],
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-
-    if stderr != b'':
-        if stderr != b'\nWARNING: apt does not have a stable CLI interface. Use with caution in scripts.\n\n':
-            raise Exception(stderr.decode())
-    elif stdout != b'':
-        print(stdout.decode())
+    run_command(['sudo', 'apt', 'update'])
 
     for pkg_name in packages_data:
-        process = subprocess.Popen(['sudo', 'apt', 'install', pkg_name],
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
-
-        if stderr != b'':
-            if stderr != b'\nWARNING: apt does not have a stable CLI interface. Use with caution in scripts.\n\n':
-                raise Exception(stderr.decode())
-        elif stdout != b'':
-            print(stdout.decode())
+        run_command(['sudo', 'apt', 'install', pkg_name])
 
 
 def process_apt_keys(key_data):
     for key_set in key_data:
         if key_set.get('url', False):
             f_path = url_to_local_file_path(key_set['url'])
-            os.environ['APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE'] = '1'
             run_command(['sudo', 'apt-key', 'add', f_path])
             print(f"key added: {key_set['url']}")
 
@@ -43,16 +21,7 @@ def process_bash_scripts(data):
     for key_set in data:
         if key_set.get('url', False):
             f_path = url_to_local_file_path(key_set['url'])
-
-            process = subprocess.Popen(['bash', f_path],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
-            stdout, stderr = process.communicate()
-
-            if stderr != b'':
-                raise Exception(stderr.decode())
-            elif stdout != b'':
-                print(stdout.decode())
+            run_command(['bash', f_path])
 
 
 def process_sources(sources_list):
