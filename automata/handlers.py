@@ -93,15 +93,7 @@ def process_sources(sources_list):
         src_file = content_to_temp_path(source_content)
         dst_file = f"/etc/apt/sources.list.d/{file_name}"
 
-        process = subprocess.Popen(['sudo', 'cp', src_file, dst_file],
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
-
-        if stderr != b'':
-            raise Exception(stderr.decode())
-        elif stdout != b'':
-            print(stdout.decode())
+        run_command(['sudo', 'cp', src_file, dst_file])
 
 
 def process_file_block(files_data):
@@ -110,30 +102,27 @@ def process_file_block(files_data):
         dst_file = file_info['dest']
 
         if file_info.get('sudo', False):
-            process = subprocess.Popen(['sudo', 'cp', src_file, dst_file],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
-            stdout, stderr = process.communicate()
-
-            if stderr != b'':
-                raise Exception(stderr.decode())
-            elif stdout != b'':
-                print(stdout.decode())
+            run_command(['sudo', 'cp', src_file, dst_file])
         else:
             new_content = open(dst_file).read()
             open(src_file, 'w').write(new_content)
 
 
+def run_command(cmd):
+    process = subprocess.Popen(cmd,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    if stderr != b'':
+        raise Exception(stderr.decode())
+    elif stdout != b'':
+        print(stdout.decode())
+
+
 def process_systemd_services(service_block):
     for service_name in service_block.keys():
         for action in service_block[service_name]:
-            process_cmd = f"sudo systemctl {action} {service_name}".split()
-            process = subprocess.Popen(process_cmd,
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
-            stdout, stderr = process.communicate()
-            if stderr != b'':
-                raise Exception(stderr.decode())
+            run_command(['sudo', 'systemctl', action, service_name])
 
 
 def process_version(version):
