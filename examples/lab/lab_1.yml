@@ -13,8 +13,8 @@
 
 - files:
   -
-    src: '/etc/nginx/nginx.conf'
-    dest: 'examples/lab/configurations/nginx.conf'
+    dest: '/etc/nginx/nginx.conf'
+    src: 'examples/lab/configurations/nginx.conf'
     sudo: yes
 
 # Change state of running services
