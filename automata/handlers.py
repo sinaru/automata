@@ -51,8 +51,8 @@ def process_file_block(files_data):
 
 def process_systemd_services(service_block):
     for service_name in service_block.keys():
-        for action in service_block[service_name]:
-            run_command(['sudo', 'systemctl', action, service_name])
+        action = service_block[service_name]
+        run_command(['sudo', 'systemctl', action, service_name])
 
 
 def process_version(version):

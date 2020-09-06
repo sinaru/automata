@@ -17,10 +17,8 @@
     src: 'examples/lab/configurations/nginx.conf'
     sudo: yes
 
-# Change state of running services
 - systemd.services:
-    nginx:
-      - restart
+    nginx: restart
 
 - bash_scripts:
     - https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh
