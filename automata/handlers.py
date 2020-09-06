@@ -1,4 +1,4 @@
-from automata.helpers import url_to_local_file_path, content_to_temp_path, run_command
+from automata.helpers import url_to_local_file_path, content_to_temp_path, run_command, is_http_url
 
 
 # todo maybe use apt package
@@ -18,10 +18,12 @@ def process_apt_keys(key_data):
 
 
 def process_bash_scripts(data):
-    for key_set in data:
-        if key_set.get('url', False):
-            f_path = url_to_local_file_path(key_set['url'])
+    for key in data:
+        if is_http_url(key):
+            f_path = url_to_local_file_path(key)
             run_command(['bash', f_path])
+        else:
+            run_command(['bash', key])
 
 
 def process_sources(sources_list):

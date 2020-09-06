@@ -23,4 +23,4 @@
       - restart
 
 - bash_scripts:
-    - url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh
+    - https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh
