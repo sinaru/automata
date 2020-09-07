@@ -1,7 +1,7 @@
 - version: '0.1'
 
 - apt_keys:
-  - url: https://dl.yarnpkg.com/debian/pubkey.gpg
+  - https://dl.yarnpkg.com/debian/pubkey.gpg
 
 - sources:
   - yarn: deb https://dl.yarnpkg.com/debian/ stable main

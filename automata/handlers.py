@@ -9,12 +9,14 @@ def process_apt_packages(packages_data):
         run_command(['sudo', 'apt', 'install', pkg_name])
 
 
-def process_apt_keys(key_data):
-    for key_set in key_data:
-        if key_set.get('url', False):
-            f_path = url_to_local_file_path(key_set['url'])
-            run_command(['sudo', 'apt-key', 'add', f_path])
-            print(f"key added: {key_set['url']}")
+def process_apt_keys(data):
+    for item in data:
+        if is_http_url(item):
+            f_path = url_to_local_file_path(item)
+        else:
+            f_path = item
+        run_command(['sudo', 'apt-key', 'add', f_path])
+        print(f"key added: {item}")
 
 
 def process_bash_scripts(data):
