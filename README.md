@@ -1,9 +1,7 @@
 # Automata
 
-This is a python based package which is a codebase that automate Ubuntu platform setup.
-
-Automata has it's own DSL based on YAML syntax. You can specify the configuration for your machine
-in a YAML file based on this specific DSL.
+Automata is a simple automated Ubuntu machine setup tool. Automata has it's own DSL based on YAML syntax 
+to specify the configuration for the Ubuntu machine. 
 
 To run:
 
