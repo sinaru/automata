@@ -4,7 +4,7 @@
   - url: https://dl.yarnpkg.com/debian/pubkey.gpg
 
 - sources:
-  - yarn: 'deb https://dl.yarnpkg.com/debian/ stable main'
+  - yarn: deb https://dl.yarnpkg.com/debian/ stable main
 
 - apt_packages:
   - vim
@@ -13,8 +13,8 @@
 
 - files:
   -
-    dest: '/etc/nginx/nginx.conf'
-    src: 'examples/lab/configurations/nginx.conf'
+    dest: /etc/nginx/nginx.conf
+    src: examples/lab/configurations/nginx.conf
     sudo: yes
 
 - systemd.services:
