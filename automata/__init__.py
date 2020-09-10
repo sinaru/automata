@@ -1,10 +1,9 @@
 import os
 import shutil
 
-from automata.handlers import process_apt_packages, process_apt_keys, process_sources, process_file_block, \
-    process_systemd_services, process_version, process_bash_scripts, process_git
+from automata.handlers import *
 
-key_function = {
+KEY_FUNC_MAP = {
     'version': 'process_version',
     'apt_packages': 'process_apt_packages',
     'apt_keys': 'process_apt_keys',
@@ -35,7 +34,7 @@ def process_list_entry(data):
 
 
 def process_entry(section_name, data):
-    function = key_function.get(section_name, False)
+    function = KEY_FUNC_MAP.get(section_name, False)
 
     if not function:
         raise Exception(f"Invalid type {section_name}")
