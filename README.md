@@ -1,6 +1,6 @@
 # Automata
 
-Automata is a simple automated Ubuntu machine setup tool. Automata has it's own DSL based on YAML syntax 
+Automata is a simple python package to automate the setup of Ubuntu machines. Automata has it's own DSL based on YAML syntax 
 to specify the configuration for the Ubuntu machine. 
 
 To run:
@@ -103,7 +103,7 @@ To perform particular action on `systemd` services, you can use this function.
 - git:
   -
    clone: https://github.com/NirantK/awesome-project-ideas
-   dest: /home/sinaru/temp/awesome-project-ideas
+   dest: /home/foo/temp/awesome-project-ideas
 ```
 
 ## Development
