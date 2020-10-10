@@ -14,7 +14,7 @@
 - files:
   -
     dest: /etc/nginx/nginx.conf
-    src: examples/lab/configurations/nginx.conf
+    src: examples/configurations/nginx.conf
     sudo: yes
 
 - systemd.services:
@@ -26,4 +26,4 @@
 - git:
   -
    clone: https://github.com/NirantK/awesome-project-ideas
-   dest: /home/sinaru/temp/awesome-project-ideas
+   dest: temp/awesome-project-ideas
