@@ -1,0 +1,29 @@
+- version: '0.1'
+
+- apt_keys:
+  - https://dl.yarnpkg.com/debian/pubkey.gpg
+
+- sources:
+  - yarn: deb https://dl.yarnpkg.com/debian/ stable main
+
+- apt_packages:
+  - vim
+  - yarn
+  - nginx
+
+- files:
+  -
+    dest: /etc/nginx/nginx.conf
+    src: examples/configurations/nginx.conf
+    sudo: yes
+
+- systemd.services:
+    nginx: restart
+
+- bash_scripts:
+    - https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh
+
+- git:
+  -
+   clone: https://github.com/NirantK/awesome-project-ideas
+   dest: temp/awesome-project-ideas
